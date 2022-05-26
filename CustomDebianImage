@@ -1,0 +1,24 @@
+# This Docker File will pull a debian 11 image as its base and install apache with the php mod. Then it will remove the index.html in the container and 
+copy index.php from the host file as well as an image to the container apache default. Lastly, it will change the host name and start apache in the foreground
+
+# use Debian 11 image
+FROM debian:11
+
+# run commands to install apache and apache php mod (during runtime)
+RUN apt-get update && apt-get -y install apache2 && apt-get -y install libapache2-mod.php
+
+# open the container to port
+EXPOSE 80
+
+# label the image
+LABEL author=Champr12
+
+# remove index.html in the container (during runtime)
+RUN rm /var/www/html/index.html
+
+# copy index.php and the image file from host to container apache default
+COPY index.php /var/www/html/
+COPY image.jpg /var/www/html/
+
+# change the hostnam and start apache in the foreground
+CMD hostname Champr12 && apache2ctl -D FOREGROUND
